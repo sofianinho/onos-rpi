@@ -1,4 +1,4 @@
-# rpi-onos
+# onos-rpi
 Open Network Operating System (ONOS) v1.8 on Raspberry Pi 2 (arm-v7l, raspbian 8.0)
 
 # About the version and base images
