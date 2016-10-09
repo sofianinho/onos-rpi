@@ -1,0 +1,51 @@
+apt-get install -y --no-install-recommends ca-certificates wget python maven git curl automake bison flex g++ git libboost1.55-all-dev libevent-dev libssl-dev libtool make pkg-config  thrift-compiler patch
+wget http://download.oracle.com/otn-pub/java/jdk/8u101-b13/jdk-8u101-linux-arm32-vfp-hflt.tar.gz?AuthParam=1475241313_215dee0dd847991365a8b6b4b6ab410e -O /tmp/jdk.tar.gz
+cd /tmp && tar xvfz jdk.tar.gz
+mv jdk1.8.0_101/ /opt/
+update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_101/bin/javac 1
+update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_101/bin/java 1
+export JAVA_HOME=/opt/jdk1.8.0_101/
+export HOME=/root
+export ONOS_ROOT=/src/onos
+export KARAF_VERSION=3.0.5
+export KARAF_ROOT=/root/onos/apache-karaf-3.0.5
+export KARAF_LOG=/root/onos/apache-karaf-3.0.5/data/log/karaf.log
+export BUILD_NUMBER=docker-armv7l
+export PATH=$PATH:$KARAF_ROOT/bin
+mkdir /src && cd /src
+git clone https://github.com/opennetworkinglab/onos.git && cd onos &&  mkdir -p /root/Downloads 
+
+###### thrift
+
+cp /usr/bin/thrift /src/onos/protocols/bmv2/thrift-api/target/thrift-compiler/thrift-linux-arm_32.exe
+
+###### protobuf
+wget https://github.com/samjabrahams/tensorflow-on-raspberry-pi/blob/master/third_party/protobuf/protoc-linux-arm32.exe -O /root/Downloads/protoc-linux-arm32.exe
+git clone https://github.com/google/protobuf.git
+cd protobuf
+./autogen.sh
+./configure
+make
+make install
+cd ..
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+mvn install:install-file -DgroupId=com.google.protobuf -DartifactId=protoc -Dversion=3.0.0 -Dclassifier=linux-arm_32 -Dpackaging=exe -Dfile=/root/Downloads/protoc-linux-arm32.exe
+
+###### grpc (I also copied the built file in /data so the last phase -Dfile=/data/protoc-gen-grpc-java)
+git clone -b v1.0.0 https://github.com/grpc/grpc-java
+cd grpc-java
+./gradlew
+wget https://raw.githubusercontent.com/neo-titans/odroid/master/build_tensorflow/grpc-java.v0.15.0.patch -O /root/Downloads/grpc-java.v0.15.0.patch
+cd compiler
+patch -p1 < /root/Downloads/grpc-java.v0.15.0.patch
+cd ..
+./gradlew java_pluginExecutable
+cd ..
+mvn install:install-file -DgroupId=io.grpc -DartifactId=protoc-gen-grpc-java -Dversion=1.0.0 -Dclassifier=linux-arm_32 -Dpackaging=exe -Dfile=grpc-java/compiler/build/exe/java_plugin/protoc-gen-grpc-java 
+
+####### packaging phase (command: tools/build/onos-package)
+sed -i 's/jar -xf/unzip/g' tools/test/bin/onos-stage-apps
+tools/build/onos-package
+
+#clean up, untar your onos package and write your entrypoint
+
