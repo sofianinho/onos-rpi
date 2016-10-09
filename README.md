@@ -2,11 +2,11 @@
 Open Network Operating System (ONOS) v1.8 on Raspberry Pi 2 (arm-v7l, raspbian 8.0)
 
 # About the version and base images
-This version of ONOS was built and runs on Raspberry pi 2 (arm-v7l architecture). The build was done over dockerized Raspbian 8.0/Linux 4.1.19-v7+. The docker image used is `sdhibit/rpi-raspbian`. You will find that version in the [raspbian Dockerfile](./Dockerfile.rpb). The image used to deploy on the dockerhub is `resin/armv7hf-debian-qemu`. This is the base image you will have if you got your image using `docker pull sofianinho/rpi-onos`. You will find that version in the [main Dockerfile](./Dockerfile). This difference comes from the dockerhub's automatic building done over AMD64 arch. This solution is proposed by *Petros Angelatos* from resin.io in this [post](https://resin.io/blog/building-arm-containers-on-any-x86-machine-even-dockerhub/).
+This version of ONOS was built and runs on Raspberry pi 2 (arm-v7l architecture). The build was done over dockerized Raspbian 8.0/Linux 4.1.19-v7+. The docker image used is `sdhibit/rpi-raspbian`. You will find that version in the [raspbian Dockerfile](./Dockerfile). The image used to deploy on the dockerhub is not automatically built as docker cloud only supports builds on AMD64 architectures. All the information and guidance to build your own image from scrtach are in my [repo](.). I am currently looking for a convenient way to trigger the builds automatically.
 
-The result of the build (onos 1.8.0) was tested successfully on Raspberry pi 2. If any users are on RPi3, your feedback is welcome. When you run your docker, wait about 3 minutes before trying commands or using the UI (time to load the apps and the rest of the system). 
+The result of the build (onos 1.8.0) was tested successfully on Raspberry pi 2. If any users are on RPi 1 or RPi 3, your feedback is welcome. When you run your docker, wait about 3 minutes before trying commands or using the UI (time to load the apps and the rest of the system, proper to onos)
 
-I choose to package it and run it in Docker for my convenience, but there is nothing holding you back from running it on bare Raspberry pi metal. Other armv7 ou armv8 architectures may be tested as well (no guaranty there).
+I choose to package it and run it in Docker for my convenience, but there is nothing holding you back from running it on bare Raspberry pi metal. Other armv7 ou armv8 architectures may be tested as well (no guaranty there). If you want direct links to the packaged (tarball) onos to install on bare arm metal (or out of curiosity), have a look at the Dockerfile, you will find the download links there. 
 
 # Rebuild from scratch
 The build takes a long time on Raspberry pi 2, especially if any errors occur. If you still want to go down the rabbit hole, here is some precious advice I gathered (feel free to propose update or feedback):
