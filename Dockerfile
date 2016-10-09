@@ -4,15 +4,17 @@ LABEL version="1.8.0-docker-armv7l"
 LABEL description="ONOS for Raspberry Pi"
 
 # Add Java and Onos tarballs
-ADD https://drive.google.com/open?id=0BzbivnzUyTDtdmxSMVhodHJoYm8 /tmp/jdk.tar.gz
-ADD https://drive.google.com/open?id=0BzbivnzUyTDtcnRzX0pZOGpiVGM /tmp/onos.tar.gz 
-
-# Untar and install
-RUN tar xfz /tmp/jdk.tar.gz -C /opt &&\
+RUN apt-get update -qq && apt-get install -y --no-install-recommends wget ca-certificates &&\
+    wget https://raw.githubusercontent.com/Nanolx/patchimage/master/tools/gdown.pl -O /root/gdown.pl &&\
+    chmod +x /root/gdown.pl && touch /tmp/cookie.txt &&\
+    ./gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtdmxSMVhodHJoYm8&export=download' '/tmp/jdk.tar.gz' &&\
+    ./gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtcnRzX0pZOGpiVGM&export=download' '/tmp/onos.tar.gz' &&\
+    tar xfz /tmp/jdk.tar.gz -C /opt &&\
     update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_101/bin/javac 1 &&\
     update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_101/bin/java 1 &&\
     tar xfz /tmp/onos.tar.gz -C /root/ &&\
-    rm -rf /tmp/*
+    apt-get remove --purge -y wget 
+    rm -rf /tmp/* /root/gdown.pl
 
 # Set the environment variables
 ENV HOME /root
