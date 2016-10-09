@@ -7,22 +7,22 @@ LABEL description="ONOS for Raspberry Pi"
 RUN apt-get update -qq && apt-get install -y --no-install-recommends wget ca-certificates &&\
     wget https://raw.githubusercontent.com/Nanolx/patchimage/master/tools/gdown.pl -O /root/gdown.pl &&\
     chmod +x /root/gdown.pl && touch /tmp/cookie.txt &&\
-    ./gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtdmxSMVhodHJoYm8&export=download' '/tmp/jdk.tar.gz' &&\
-    ./gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtcnRzX0pZOGpiVGM&export=download' '/tmp/onos.tar.gz' &&\
+    /root/gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtdmxSMVhodHJoYm8&export=download' '/tmp/jdk.tar.gz' &&\
+    /root/gdown.pl 'https://docs.google.com/uc?id=0BzbivnzUyTDtcnRzX0pZOGpiVGM&export=download' '/tmp/onos.tar.gz' &&\
     tar xfz /tmp/jdk.tar.gz -C /opt &&\
     update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_101/bin/javac 1 &&\
     update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_101/bin/java 1 &&\
     tar xfz /tmp/onos.tar.gz -C /root/ &&\
-    apt-get remove --purge -y wget 
+    apt-get remove --purge -y wget && apt-get autoremove -y &&\ 
     rm -rf /tmp/* /root/gdown.pl
 
 # Set the environment variables
-ENV HOME /root
-ENV JAVA_HOME /opt/jdk1.8.0_101/
-ENV KARAF_VERSION 3.0.5
-ENV KARAF_ROOT /root/onos-1.8.0.docker-armv7l/apache-karaf-3.0.5
-ENV KARAF_LOG /root/onos-1.8.0.docker-armv7l/apache-karaf-3.0.5/data/log/karaf.log
-ENV PATH $PATH:$KARAF_ROOT/bin
+ENV HOME=/root \
+    JAVA_HOME=/opt/jdk1.8.0_101/ \
+    KARAF_VERSION=3.0.5 \
+    KARAF_ROOT=/root/onos-1.8.0.docker-armv7l/apache-karaf-3.0.5 \ 
+    KARAF_LOG=/root/onos-1.8.0.docker-armv7l/apache-karaf-3.0.5/data/log/karaf.log \
+    PATH=$PATH:$KARAF_ROOT/bin
 
 # Change to /root directory
 WORKDIR /root/onos-1.8.0.docker-armv7l
