@@ -1,8 +1,8 @@
 # rpi-onos
 Open Network Operating System (ONOS) v1.8 on Raspberry Pi 2 (arm-v7l, raspbian 8.0)
 
-# About the version
-This version of ONOS was built and runs on Raspberry pi 2 (arm-v7l architecture). The build was done over dockerized Raspbian 8.0/Linux 4.1.19-v7+. The docker image used is `sdhibit/rpi-raspbian`. 
+# About the version and base images
+This version of ONOS was built and runs on Raspberry pi 2 (arm-v7l architecture). The build was done over dockerized Raspbian 8.0/Linux 4.1.19-v7+. The docker image used is `sdhibit/rpi-raspbian`. You will find that version in the [raspbian Dockerfile](./Dockerfile.rpb). The image used to deploy on the dockerhub is `resin/armv7hf-debian-qemu`. This is the base image you will have if you got your image using `docker pull sofianinho/rpi-onos`. You will find that version in the [main Dockerfile](./Dockerfile). This difference comes from the dockerhub's automatic building done over AMD64 arch. This solution is proposed by *Petros Angelatos* from resin.io in this [post](https://resin.io/blog/building-arm-containers-on-any-x86-machine-even-dockerhub/).
 
 The result of the build (onos 1.8.0) was tested successfully on Raspberry pi 2. If any users are on RPi3, your feedback is welcome. When you run your docker, wait about 3 minutes before trying commands or using the UI (time to load the apps and the rest of the system). 
 

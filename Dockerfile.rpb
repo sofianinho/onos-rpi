@@ -1,9 +1,7 @@
-FROM resin/armv7hf-debian
+FROM sdhibit/rpi-raspbian
 MAINTAINER Sofiane Imadali <sofiane.imadali@orange.com>
 LABEL version="1.8.0-docker-armv7l"
 LABEL description="ONOS for Raspberry Pi"
-
-RUN [ "cross-build-start" ]
 
 # Add Java and Onos tarballs
 ADD https://drive.google.com/open?id=0BzbivnzUyTDtdmxSMVhodHJoYm8 /tmp/jdk.tar.gz
@@ -26,8 +24,6 @@ ENV PATH $PATH:$KARAF_ROOT/bin
 
 # Change to /root directory
 WORKDIR /root/onos-1.8.0.docker-armv7l
-
-RUN [ "cross-build-end" ]  
 
 # Ports
 # 6653 - OpenFlow
